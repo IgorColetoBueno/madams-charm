@@ -4,6 +4,7 @@ import Busboy from "busboy";
 import { v4 as uuidv4 } from "uuid";
 import connectMongo from "@/config/db";
 import Product, { IProduct } from "@/models/product";
+import { FilterQuery } from "mongoose";
 
 const s3 = new AWS.S3({
   accessKeyId: process.env.AWS_ACCESS_KEY_ID,
@@ -22,14 +23,8 @@ interface IFileMetaData {
   filename: string;
   mimeType: string;
 }
-interface IFileParams {
-  Bucket: string;
-  Key: string;
-  Body: any;
-  ContentType: string;
-}
 
-export default async function POST(req: NextApiRequest, res: NextApiResponse) {
+export default async function PUT(req: NextApiRequest, res: NextApiResponse) {
   const contentType = req.headers["content-type"];
 
   if (!contentType || !contentType.includes("multipart/form-data")) {
@@ -76,11 +71,11 @@ export default async function POST(req: NextApiRequest, res: NextApiResponse) {
   busboy.on("finish", async () => {
     const savedFiles = await Promise.all(files);
 
-    const product = Product.create({
+    const product = Product.findByIdAndUpdate(fields._id, {
       name: fields.name,
       promotionalMessage: fields.promotionalMessage,
       value: fields.value,
-      photos: savedFiles.map((file) => file.Location),
+      photos: [...fields.photos, ...savedFiles.map((file) => file.Location)],
     } as IProduct);
 
     return res.status(200).json({ product });
