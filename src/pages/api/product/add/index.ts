@@ -1,9 +1,9 @@
-import AWS from "aws-sdk";
-import { NextApiRequest, NextApiResponse } from "next";
-import Busboy from "busboy";
-import { v4 as uuidv4 } from "uuid";
 import connectMongo from "@/config/db";
 import Product, { IProduct } from "@/models/product";
+import AWS from "aws-sdk";
+import Busboy from "busboy";
+import { NextApiRequest, NextApiResponse } from "next";
+import { v4 as uuidv4 } from "uuid";
 
 const s3 = new AWS.S3({
   accessKeyId: process.env.AWS_ACCESS_KEY_ID,
@@ -52,7 +52,7 @@ export default async function POST(req: NextApiRequest, res: NextApiResponse) {
       encoding: string,
       mimetype: string
     ) => {
-      const params = {
+      const params: IFileParams = {
         Bucket: process.env.AWS_BUCKET_NAME!,
         Key: uuidv4() + fileMetaData.filename,
         Body: file,
@@ -83,6 +83,8 @@ export default async function POST(req: NextApiRequest, res: NextApiResponse) {
         value: fields.value,
         size: fields.size,
         category: fields.category,
+        buyValue: fields.buyValue,
+        buyDate: new Date(fields.buyDate),
         photos: savedFiles.map((file) => file.Location),
       } as IProduct);
 

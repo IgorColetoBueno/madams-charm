@@ -22,6 +22,8 @@ const schema = yup.object({
   name: yup.string().required().label("Name"),
   promotionalMessage: yup.string().label("Promotional message"),
   value: yup.number().required().label("Value").min(1),
+  buyValue: yup.number().required().label("Buy value").min(1),
+  buyDate: yup.string().required().label("Buy date"),
   category: yup.string().label("Category"),
   size: yup.string().label("Size"),
   files: yup.array(
@@ -55,6 +57,8 @@ const ProductSave = ({}: IProductSaveProps) => {
     formData.append("value", data.value as any);
     formData.append("size", data.size!);
     formData.append("category", data.category!);
+    formData.append("buyDate", data.buyDate);
+    formData.append("buyValue", data.buyValue as any);
 
     data.files?.map((file) => formData.append("files", file as any));
 
@@ -85,6 +89,10 @@ const ProductSave = ({}: IProductSaveProps) => {
               name: "",
               value: 0,
               files: [],
+              buyDate: "",
+              buyValue: 0,
+              category: "",
+              size: "",
               promotionalMessage: "",
             } as yup.InferType<typeof schema>
           }
@@ -189,6 +197,38 @@ const ProductSave = ({}: IProductSaveProps) => {
                   onBlur={handleBlur}
                   value={values.value}
                   name="value"
+                />
+              </div>
+              <div>
+                <Input
+                  success={!!touched.buyValue && !errors.buyValue}
+                  errorMessage={
+                    !!touched.buyValue && !!errors.buyValue
+                      ? errors.buyValue
+                      : undefined
+                  }
+                  label="Buy value"
+                  type="number"
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  value={values.buyValue}
+                  name="buyValue"
+                />
+              </div>
+              <div>
+                <Input
+                  success={!!touched.buyDate && !errors.buyDate}
+                  errorMessage={
+                    !!touched.buyDate && !!errors.buyDate
+                      ? errors.buyDate
+                      : undefined
+                  }
+                  label="Buy date"
+                  type="date"
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  value={values.buyDate}
+                  name="buyDate"
                 />
               </div>
               <div>
