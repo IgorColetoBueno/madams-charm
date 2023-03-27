@@ -41,6 +41,8 @@ export interface IProduct {
   name: string;
   promotionalMessage: string;
   value: number;
+  buyValue: number;
+  buyDate: Date;
   category: ProductCategory;
   size: ProductSize;
   photos: string[];
@@ -49,12 +51,8 @@ const productSchema = new Schema<IProduct>({
   name: {
     type: String,
     required: true,
-    unique: true,
   },
-  promotionalMessage: {
-    type: String,
-    required: true,
-  },
+  promotionalMessage: String,
   category: {
     type: String,
     required: true,
@@ -65,6 +63,14 @@ const productSchema = new Schema<IProduct>({
   },
   value: {
     type: Number,
+    required: true,
+  },
+  buyValue: {
+    type: Number,
+    required: true,
+  },
+  buyDate: {
+    type: Date,
     required: true,
   },
   photos: {

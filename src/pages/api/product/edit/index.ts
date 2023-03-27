@@ -1,10 +1,9 @@
-import AWS from "aws-sdk";
-import { NextApiRequest, NextApiResponse } from "next";
-import Busboy from "busboy";
-import { v4 as uuidv4 } from "uuid";
 import connectMongo from "@/config/db";
 import Product, { IProduct } from "@/models/product";
-import { FilterQuery } from "mongoose";
+import AWS from "aws-sdk";
+import Busboy from "busboy";
+import { NextApiRequest, NextApiResponse } from "next";
+import { v4 as uuidv4 } from "uuid";
 
 const s3 = new AWS.S3({
   accessKeyId: process.env.AWS_ACCESS_KEY_ID,
@@ -75,6 +74,10 @@ export default async function PUT(req: NextApiRequest, res: NextApiResponse) {
       name: fields.name,
       promotionalMessage: fields.promotionalMessage,
       value: fields.value,
+      size: fields.size,
+      category: fields.category,
+      buyValue: fields.buyValue,
+      buyDate: new Date(fields.buyDate),
       photos: [...fields.photos, ...savedFiles.map((file) => file.Location)],
     } as IProduct);
 

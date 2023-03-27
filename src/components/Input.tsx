@@ -57,7 +57,6 @@ const Input = ({
       <input
         {...rest}
         id={rest.id || `input-${rest.name}`}
-        type="text"
         className={classNames(
           "block w-full p-2.5 text-sm rounded-lg border",
           inputClassname,
