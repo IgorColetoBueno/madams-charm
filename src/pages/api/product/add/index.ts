@@ -74,16 +74,22 @@ export default async function POST(req: NextApiRequest, res: NextApiResponse) {
   });
 
   busboy.on("finish", async () => {
-    const savedFiles = await Promise.all(files);
+    try {
+      const savedFiles = await Promise.all(files);
 
-    const product = Product.create({
-      name: fields.name,
-      promotionalMessage: fields.promotionalMessage,
-      value: fields.value,
-      photos: savedFiles.map((file) => file.Location),
-    } as IProduct);
+      const product = await Product.create({
+        name: fields.name,
+        promotionalMessage: fields.promotionalMessage,
+        value: fields.value,
+        size: fields.size,
+        category: fields.category,
+        photos: savedFiles.map((file) => file.Location),
+      } as IProduct);
 
-    return res.status(200).json({ product });
+      return res.status(200).json({ product });
+    } catch (error) {
+      return res.status(500).json(error);
+    }
   });
 
   req.pipe(busboy);
