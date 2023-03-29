@@ -4,6 +4,7 @@ import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/solid";
 import classNames from "classnames";
 import Image from "next/image";
 import { DetailedHTMLProps, HTMLAttributes, useState } from "react";
+import Button from "../Button";
 
 type IProductCardProps = DetailedHTMLProps<
   HTMLAttributes<HTMLDivElement>,
@@ -16,6 +17,7 @@ const ProductCard = ({
   photos = [],
   name,
   promotionalMessage,
+  value
 }: IProductCardProps) => {
   const [page, setPage] = useState(1);
 
@@ -36,7 +38,7 @@ const ProductCard = ({
   };
 
   return (
-    <div className="w-[280px] h-[300px] bg-slate-300 dark:bg-slate-800 rounded-lg justify-self-center">
+    <div className="w-[280px] h-[370px] rounded-lg justify-self-center border border-gray-200 rounded-lg shadow dark:border-gray-800 dark: bg-gray-800 dark:shadow-lg">
       {!!photos?.length && (
         <div id={`carousel-${_id}`} className="relative">
           <div className="relative overflow-hidden after:clear-both after:block after:content-['']">
@@ -47,9 +49,9 @@ const ProductCard = ({
               style={{ "backface-visibility": "hidden" } as any}
             >
               <Image
-                height={180}
+                height={220}
                 width={280}
-                style={{ height: "180px", width: "280px" }}
+                style={{ height: "220px", width: "280px" }}
                 className="rounded-lg"
                 src={photos[page - 1]}
                 alt="..."
@@ -82,13 +84,24 @@ const ProductCard = ({
           </button>
         </div>
       )}
-      <div className="p-2">
-        <span className="text-lg dark:text-white text-gray-800 font-medium">
-          {name}
-        </span>
-        {!!promotionalMessage && (
-          <p className="text-sm text-gray-400">{promotionalMessage}</p>
-        )}
+      <div className="p-2 h-[110px] flex flex-col justify-between">
+        <div>
+          <span className="text-lg dark:text-white text-gray-800 font-medium">
+            {name}
+          </span>
+          {!!promotionalMessage && (
+            <p className="text-sm text-gray-600 dark:text-gray-400">{promotionalMessage}</p>
+          )}
+        </div>
+        <div className="flex justify-end flex-col w-full">
+          <p className="text-semibold text-2xl self-end">{value!.toLocaleString("pt-BR", {
+            style: 'currency',
+            currency: 'BRL'
+          })}</p>
+          <Button color="green" className="w-full mt-2">
+            Adicionar ao carrinho
+          </Button>
+        </div>
       </div>
     </div>
   );
