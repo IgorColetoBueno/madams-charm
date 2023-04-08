@@ -16,6 +16,7 @@
     "aws-sdk": "^2.1338.0",
     "busboy": "^1.6.0",
     "classnames": "^2.3.2",
+    "date-fns": "^2.29.3",
     "eslint": "8.36.0",
     "eslint-config-next": "13.2.4",
     "formik": "^2.2.9",
@@ -32,6 +33,7 @@
     "@types/busboy": "^1.5.0",
     "@types/mongoose": "^5.11.97",
     "autoprefixer": "^10.4.14",
+    "cypress": "^12.9.0",
     "postcss": "^8.4.21",
     "tailwindcss": "^3.2.7"
   }

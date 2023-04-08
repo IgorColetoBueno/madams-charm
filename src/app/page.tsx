@@ -1,11 +1,14 @@
-"use client"
+"use client";
 import Navbar from "@/components/navbar/Navbar";
 import ProductCard from "@/components/product-card";
 import { IProduct } from "@/models/product";
-import useSWR from "swr"
+import useSWR from "swr";
 
-export default function Home() {
-  const {data} = useSWR<IProduct[]>(`/api/product/search`, (url) => fetch(url).then(res => res.json()))
+const Home = () => {
+  const { data } = useSWR<IProduct[]>(`/api/product/search`, (url) =>
+    fetch(url).then((res) => res.json())
+  );
+
   return (
     <>
       <header>
@@ -15,14 +18,21 @@ export default function Home() {
         <section id="filters"></section>
         <section
           id="products"
-          className="grid xl:grid-cols-5 lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-1 gap-5"
+          className="grid lg:grid-cols-4 md:grid-cols-2 sm:grid-cols-1 gap-5"
         >
-          {!!data && data.map((product, key) => <ProductCard
-            key={`product-${key}`} {...product}
-          />)}
+          {!!data &&
+            data.map((product, key) => (
+              <ProductCard
+                onClick={() => {}}
+                key={`product-${key}`}
+                {...product}
+              />
+            ))}
         </section>
       </main>
       <footer></footer>
     </>
   );
-}
+};
+
+export default Home;

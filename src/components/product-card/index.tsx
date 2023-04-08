@@ -1,23 +1,32 @@
 "use client";
 import { IProduct } from "@/models/product";
-import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/solid";
-import classNames from "classnames";
+import {
+  ChevronLeftIcon,
+  ChevronRightIcon,
+  XMarkIcon,
+} from "@heroicons/react/24/solid";
 import Image from "next/image";
-import { DetailedHTMLProps, HTMLAttributes, useState } from "react";
-import Button from "../Button";
+import { DetailedHTMLProps, HTMLAttributes, MouseEvent, useState } from "react";
+import IconButton from "../IconButton";
 
 type IProductCardProps = DetailedHTMLProps<
   HTMLAttributes<HTMLDivElement>,
   HTMLDivElement
 > &
-  Partial<IProduct>;
+  Partial<IProduct> & {
+    onClick: () => void;
+    onDelete?: () => void;
+  };
 
 const ProductCard = ({
   _id,
   photos = [],
   name,
   promotionalMessage,
-  value
+  value,
+  size,
+  onClick,
+  onDelete,
 }: IProductCardProps) => {
   const [page, setPage] = useState(1);
 
@@ -37,8 +46,18 @@ const ProductCard = ({
     setPage(page + 1);
   };
 
+  const handleDelete = (e: MouseEvent<HTMLButtonElement, any>) => {
+    e.stopPropagation();
+
+    onDelete!();
+  };
+
   return (
-    <div className="w-[280px] h-[370px] rounded-lg justify-self-center border border-gray-200 rounded-lg shadow dark:border-gray-800 dark: bg-gray-800 dark:shadow-lg">
+    <div
+      data-testid="product-card"
+      onClick={onClick}
+      className="relative cursor-pointer w-[280px] rounded-lg justify-self-center border border-gray-200 rounded-lg shadow dark:border-gray-800 dark: bg-gray-800 hover:shadow-xl"
+    >
       {!!photos?.length && (
         <div id={`carousel-${_id}`} className="relative">
           <div className="relative overflow-hidden after:clear-both after:block after:content-['']">
@@ -46,7 +65,7 @@ const ProductCard = ({
               className={
                 "relative float-left -mr-[100%] w-full transition-transform duration-[600ms] ease-in-out motion-reduce:transition-none"
               }
-              style={{ "backface-visibility": "hidden" } as any}
+              style={{ backfaceVisibility: "hidden" } as any}
             >
               <Image
                 height={220}
@@ -84,23 +103,37 @@ const ProductCard = ({
           </button>
         </div>
       )}
-      <div className="p-2 h-[110px] flex flex-col justify-between">
+      {!!onDelete && (
+        <IconButton
+          onClick={handleDelete}
+          bgColor="red"
+          color="white"
+          textColor="white"
+          textColorOnHover="red"
+          className="absolute -top-2 -right-2 z-index-9"
+        >
+          <XMarkIcon width={15} />
+        </IconButton>
+      )}
+      <div className="p-2 flex flex-col justify-between space-y-2">
         <div>
-          <span className="text-lg dark:text-white text-gray-800 font-medium">
-            {name}
+          <span className="text-lg dark:text-white text-gray-800 font-medium flex justify-between">
+            <span>{name} </span>
+            <span>{size}</span>
           </span>
           {!!promotionalMessage && (
-            <p className="text-sm text-gray-600 dark:text-gray-400">{promotionalMessage}</p>
+            <p className="text-sm text-gray-600 dark:text-gray-400">
+              {promotionalMessage}
+            </p>
           )}
         </div>
         <div className="flex justify-end flex-col w-full">
-          <p className="text-semibold text-2xl self-end">{value!.toLocaleString("pt-BR", {
-            style: 'currency',
-            currency: 'BRL'
-          })}</p>
-          <Button color="green" className="w-full mt-2">
-            Adicionar ao carrinho
-          </Button>
+          <p className="text-semibold text-2xl self-end">
+            {value!.toLocaleString("pt-BR", {
+              style: "currency",
+              currency: "BRL",
+            })}
+          </p>
         </div>
       </div>
     </div>
