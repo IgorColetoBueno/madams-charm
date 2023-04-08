@@ -1,3 +1,4 @@
+import { ColorType } from "@/models/colors";
 import classNames from "classnames";
 import { ButtonHTMLAttributes, DetailedHTMLProps } from "react";
 
@@ -6,18 +7,12 @@ interface IButtonProps
     ButtonHTMLAttributes<HTMLButtonElement>,
     HTMLButtonElement
   > {
-  color:
-    | "blue"
-    | "green"
-    | "cyan"
-    | "teal"
-    | "lime"
-    | "red"
-    | "pink"
-    | "purple";
+  color: ColorType;
 }
 
 const buttonColors = {
+  white:
+    "text-gray-900 from-gray-50 via-gray-100 to-white focus:ring-white dark:focus:ring-white shadow-white/50 dark:shadow-white/50",
   blue: "text-white from-blue-500 via-blue-600 to-blue-700 focus:ring-blue-300 dark:focus:ring-blue-800 shadow-blue-500/50 dark:shadow-blue-800/80",
   green:
     "text-white from-green-400 via-green-500 to-green-600 focus:ring-green-300 dark:focus:ring-green-800 shadow-green-500/50 dark:shadow-green-800/80",
@@ -28,6 +23,7 @@ const buttonColors = {
   pink: "text-white from-pink-400 via-pink-500 to-pink-600 focus:ring-pink-300 dark:focus:ring-pink-800 shadow-pink-500/50 dark:shadow-pink-800/80",
   purple:
     "text-white from-purple-500 via-purple-600 to-purple-700 focus:ring-purple-300 dark:focus:ring-purple-800 shadow-purple-500/50 dark:shadow-purple-800/80",
+  "[#ff2854]": "",
 };
 
 const Button = ({ color, className, children, ...rest }: IButtonProps) => {

@@ -69,16 +69,21 @@ export default async function PUT(req: NextApiRequest, res: NextApiResponse) {
 
   busboy.on("finish", async () => {
     const savedFiles = await Promise.all(files);
+    const photos = savedFiles.map((file) => file.Location);
 
-    const product = Product.findByIdAndUpdate(fields._id, {
+    if (!!fields.photos) {
+      photos.push(...fields.photos.split(","));
+    }
+
+    const product = await Product.findByIdAndUpdate(fields._id, {
       name: fields.name,
       promotionalMessage: fields.promotionalMessage,
-      value: fields.value,
+      value: +fields.value,
       size: fields.size,
       category: fields.category,
-      buyValue: fields.buyValue,
+      buyValue: +fields.buyValue,
       buyDate: new Date(fields.buyDate),
-      photos: [...fields.photos, ...savedFiles.map((file) => file.Location)],
+      photos,
     } as IProduct);
 
     return res.status(200).json({ product });

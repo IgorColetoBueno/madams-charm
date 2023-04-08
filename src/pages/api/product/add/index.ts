@@ -80,10 +80,10 @@ export default async function POST(req: NextApiRequest, res: NextApiResponse) {
       const product = await Product.create({
         name: fields.name,
         promotionalMessage: fields.promotionalMessage,
-        value: fields.value,
+        value: +fields.value,
         size: fields.size,
         category: fields.category,
-        buyValue: fields.buyValue,
+        buyValue: +fields.buyValue,
         buyDate: new Date(fields.buyDate),
         photos: savedFiles.map((file) => file.Location),
       } as IProduct);
