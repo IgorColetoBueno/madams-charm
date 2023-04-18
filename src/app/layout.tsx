@@ -1,6 +1,7 @@
 import { Manrope } from "next/font/google";
 import "./global.css";
 import classNames from "classnames";
+import MadamsCharmProvider from "@/store/provider";
 const manrope = Manrope({ subsets: ["latin"] });
 
 export const metadata = {
@@ -27,7 +28,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="pt-BR" className={classNames("h-full", manrope.className)}>
-      <body className="dark:bg-gray-700 bg-gray-50 h-full">{children}</body>
+      <body className="dark:bg-gray-700 bg-gray-50 h-full">
+        <MadamsCharmProvider>{children}</MadamsCharmProvider>
+      </body>
     </html>
   );
 }

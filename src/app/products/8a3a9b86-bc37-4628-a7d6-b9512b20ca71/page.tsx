@@ -1,10 +1,11 @@
 "use client";
 import ErrorPage from "@/app/error";
 import Loading from "@/app/loading";
-import Button from "@/components/Button";
+import Button from "@/components/button/Button";
 import Main from "@/components/main";
 import Navbar from "@/components/navbar/Navbar";
 import ProductCard from "@/components/product-card";
+import Spinner from "@/components/spinner/Spinner";
 import { IProduct } from "@/models/product";
 import { useRouter } from "next/navigation";
 import useSWR from "swr";
@@ -22,9 +23,7 @@ const Products = ({}: IProductsProps) => {
     router.push("/products/8a3a9b86-bc37-4628-a7d6-b9512b20ca71/add");
   };
 
-  if (!!error) return <ErrorPage />;
-
-  if (!data) return <Loading />;
+  if (!!error) return <ErrorPage response={error} />;
 
   return (
     <>
@@ -37,10 +36,8 @@ const Products = ({}: IProductsProps) => {
             Add
           </Button>
         </div>
-        <section
-          id="products"
-          className="grid lg:grid-cols-4 md:grid-cols-2 sm:grid-cols-1 gap-5"
-        >
+        {!data && <Spinner />}
+        <section id="products" className="flex justify-around flex-wrap gap-5">
           {!!data &&
             data.map((product, key) => (
               <ProductCard

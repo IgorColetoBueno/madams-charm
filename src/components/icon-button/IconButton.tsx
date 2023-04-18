@@ -14,7 +14,7 @@ interface IIconButtonProps
 }
 
 const textColors = {
-  white: "text-white",
+  white: "dark:text-white text-gray-9000",
   blue: "text-blue-500",
   green: "text-green-500",
   cyan: "text-cyan-500",
@@ -27,7 +27,7 @@ const textColors = {
 };
 
 const hoverTextColors = {
-  white: "hover:text-white",
+  white: "hover:dark:text-white hover:text-gray-900",
   blue: "hover:text-blue-500",
   green: "hover:text-green-500",
   cyan: "hover:text-cyan-500",
@@ -40,7 +40,7 @@ const hoverTextColors = {
 };
 
 const borderBgColors = {
-  white: "border-white",
+  white: "dark:border-white border-gray-900",
   blue: "border-blue-500",
   green: "border-green-500",
   cyan: "border-cyan-500",
@@ -53,7 +53,7 @@ const borderBgColors = {
 };
 
 const bgColors = {
-  white: "bg-white",
+  white: "dark:bg-white bg-gray-900",
   blue: "bg-blue-500",
   green: "bg-green-500",
   cyan: "bg-cyan-500",
@@ -66,7 +66,7 @@ const bgColors = {
 };
 
 const hoverBgColors = {
-  white: "hover:bg-white",
+  white: "hover:bg-gray-900 hover:dark:bg-white",
   blue: "hover:bg-blue-500",
   green: "hover:bg-green-500",
   cyan: "hover:bg-cyan-500",
@@ -79,7 +79,7 @@ const hoverBgColors = {
 };
 
 const focusRingColors = {
-  white: "focus:ring-white",
+  white: "focus:ring-gray-900 focus:dark:ring-white",
   blue: "focus:ring-blue-500",
   green: "focus:ring-green-500",
   cyan: "focus:ring-cyan-500",
