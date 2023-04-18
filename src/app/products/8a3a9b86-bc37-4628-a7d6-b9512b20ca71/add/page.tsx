@@ -1,7 +1,7 @@
 "use client";
-import Button from "@/components/Button";
-import Input from "@/components/Input";
-import InputFile from "@/components/InputFile";
+import Button from "@/components/button/Button";
+import Input from "@/components/input/Input";
+import InputFile from "@/components/input/InputFile";
 import Select from "@/components/Select";
 import PhotoFromInputViewer from "@/components/photo-from-input-viewer";
 import { PRODUCT_CATEGORY_LIST, PRODUCT_SIZE_LIST } from "@/models/product";

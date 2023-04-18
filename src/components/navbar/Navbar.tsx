@@ -14,6 +14,7 @@ const Navbar = ({ hideCartButton }: INavbarProps) => {
         </a>
         {!hideCartButton && (
           <button
+            data-testid="shopping-cart"
             type="button"
             className="text-white hover:text-[#ff2854] border border-white hover:bg-white focus:ring-4 focus:outline-none focus:ring-white font-medium rounded-full text-sm p-2.5 text-center inline-flex items-center dark:border-white"
           >
