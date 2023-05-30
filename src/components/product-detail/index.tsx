@@ -13,7 +13,7 @@ const ProductDetail = ({
   className,
   ...rest
 }: IProductDetailProps) => {
-  const [currImage, setCurrImage] = useState(product.photos[0]);
+  const [currIndex, setCurrIndex] = useState(0);
 
   return (
     <div
@@ -21,7 +21,28 @@ const ProductDetail = ({
       {...rest}
     >
       <div className="flex flex-col m-w-96 space-y-5">
-        {product.photos.map((photo, index) => (
+        <div className="overflow-hidden rounded-lg min-w-[280px] min-h-[280px] sm:min-h-[220px]">
+          <div className="relative w-full transition duration-500 ease-in-out transform translate-x-0 min-w-[280px] min-h-[280px] sm:min-h-[220px]">
+            {product.photos.map((image, index) => (
+              <div
+                key={index}
+                className={`absolute top-0 left-0 w-full h-full transition duration-500 ease-in-out transform ${
+                  index === currIndex ? "" : "translate-x-full"
+                }`}
+              >
+                <Image
+                  height={1600}
+                  width={1200}
+                  style={{ height: "100%", width: "100%" }}
+                  src={image}
+                  className="w-full h-full object-cover rounded-lg"
+                  alt={`Slide ${index}`}
+                />
+              </div>
+            ))}
+          </div>
+        </div>
+        {/* {product.photos.map((photo, index) => (
           <div
             key={`product-main-photo-${index}`}
             className={classNames({ hidden: currImage !== photo })}
@@ -35,11 +56,11 @@ const ProductDetail = ({
               alt="..."
             />
           </div>
-        ))}
+        ))} */}
         <div className="flex flex-row overflow-x-auto gap-5">
           {product.photos.map((photo, index) => (
             <div
-              onClick={() => setCurrImage(photo)}
+              onClick={() => setCurrIndex(index)}
               className="cursor-pointer"
               key={`product-detail-photo-${index}`}
             >

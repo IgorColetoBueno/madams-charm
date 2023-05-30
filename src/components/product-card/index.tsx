@@ -9,6 +9,7 @@ import Image from "next/image";
 import { DetailedHTMLProps, HTMLAttributes, MouseEvent, useState } from "react";
 import IconButton from "../icon-button/IconButton";
 import classNames from "classnames";
+import Carousel from "../carousel";
 
 type IProductCardProps = DetailedHTMLProps<
   HTMLAttributes<HTMLDivElement>,
@@ -61,60 +62,9 @@ const ProductCard = ({
     <div
       data-testid="product-card"
       onClick={onClick}
-      className="relative cursor-pointer w-[280px] rounded-lg justify-self-center bg-gray-200 border border-gray-200 rounded-lg shadow shadow-lg dark:border-gray-800 dark:bg-gray-800 hover:shadow-xl"
+      className="relative cursor-pointer sm:w-[280px] w-full rounded-lg justify-self-center bg-gray-200 border border-gray-200 rounded-lg shadow shadow-lg dark:border-gray-800 dark:bg-gray-800 hover:shadow-xl"
     >
-      {!!photos?.length && (
-        <div id={`carousel-${_id}`} className="relative">
-          <div className="relative overflow-hidden after:clear-both after:block after:content-['']">
-            <div
-              className={
-                "relative float-left -mr-[100%] w-full transition-transform duration-[600ms] ease-in-out motion-reduce:transition-none"
-              }
-              style={{ backfaceVisibility: "hidden" } as any}
-            >
-              {photos.map((photo, index) => (
-                <Image
-                  key={`product-card-photo-${index}`}
-                  height={1600}
-                  width={1200}
-                  style={{ height: "220px", width: "280px" }}
-                  className={classNames("rounded-lg", {
-                    hidden: index !== page,
-                  })}
-                  src={photo}
-                  alt="..."
-                />
-              ))}
-            </div>
-          </div>
-          <button
-            data-testid="product-card-previous"
-            className="absolute top-0 bottom-0 left-0 z-10 flex w-[15%] items-center justify-center border-0 bg-none p-0 text-center text-white opacity-80 transition-opacity duration-150 ease-[cubic-bezier(0.25,0.1,0.25,1.0)] hover:text-white hover:no-underline hover:opacity-100 hover:outline-none motion-reduce:transition-none"
-            type="button"
-            onClick={navigateToPrevious}
-          >
-            <span className="inline-block rounded-full bg-gray-50 dark:bg-gray-500 text-gray-400 dark:text-gray-200">
-              <ChevronLeftIcon className="h-6 w-6 p-1" />
-            </span>
-            <span className="!absolute !-m-px !h-px !w-px !overflow-hidden !whitespace-nowrap !border-0 !p-0 ![clip:rect(0,0,0,0)]">
-              Previous
-            </span>
-          </button>
-          <button
-            data-testid="product-card-next"
-            onClick={navigateToNext}
-            className="absolute top-0 bottom-0 right-0 z-10 flex w-[15%] items-center justify-center border-0 bg-none p-0 text-center text-white opacity-80 transition-opacity duration-150 ease-[cubic-bezier(0.25,0.1,0.25,1.0)] hover:text-white hover:no-underline hover:opacity-100 hover:outline-none motion-reduce:transition-none"
-            type="button"
-          >
-            <span className="inline-block rounded-full bg-gray-50 dark:bg-gray-500 text-gray-400 dark:text-gray-200">
-              <ChevronRightIcon className="h-6 w-6 p-1" />
-            </span>
-            <span className="!absolute !-m-px !h-px !w-px !overflow-hidden !whitespace-nowrap !border-0 !p-0 ![clip:rect(0,0,0,0)]">
-              Next
-            </span>
-          </button>
-        </div>
-      )}
+      {!!photos?.length && <Carousel images={photos} />}
       {!!onDelete && (
         <IconButton
           data-testid="product-card-delete"
