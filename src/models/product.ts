@@ -25,14 +25,30 @@ export const PRODUCT_CATEGORY_LIST: ProductCategory[] = [
   "Vestido",
 ];
 
-export type ProductSize = "PP" | "P" | "M" | "G" | "GG" | "XG";
+export type ProductSize =
+  | "PP"
+  | "PP/P"
+  | "P"
+  | "P/M"
+  | "M"
+  | "M/G"
+  | "G"
+  | "G/GG"
+  | "GG"
+  | "GG/XG"
+  | "XG";
 
 export const PRODUCT_SIZE_LIST: ProductSize[] = [
   "PP",
+  "PP/P",
   "P",
+  "P/M",
   "M",
+  "M/G",
   "G",
+  "G/GG",
   "GG",
+  "GG/XG",
   "XG",
 ];
 

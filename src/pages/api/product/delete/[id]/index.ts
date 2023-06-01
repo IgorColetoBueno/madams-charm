@@ -15,6 +15,6 @@ export default async function DELETE(
 
     return res.status(204).json({});
   } catch (error) {
-    return res.status(500).send(error);
+    return res.status(500).send({ error });
   }
 }

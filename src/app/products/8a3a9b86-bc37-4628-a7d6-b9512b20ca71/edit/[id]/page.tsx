@@ -324,7 +324,7 @@ const ProductEdit = ({ params: { id } }: IProductEditProps) => {
                 </div>
               </div>
             </div>
-            <div className="bg-gradient-to-r from-teal-600 to-sky-600 grid grid-rows-3 w-full">
+            <div className="bg-gradient-to-r from-teal-600 to-sky-600 grid grid-rows-3 w-full overflow-y-auto">
               {!values.files ||
                 (!values.files.length && (
                   <>
