@@ -28,7 +28,7 @@ const Products = ({}: IProductsProps) => {
   return (
     <>
       <header>
-        <Navbar hideCartButton />
+        <Navbar />
       </header>
       <Main>
         <div className="flex justify-end">
