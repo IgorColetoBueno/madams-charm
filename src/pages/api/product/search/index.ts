@@ -13,7 +13,7 @@ export default async function GET(req: NextApiRequest, res: NextApiResponse) {
       size: { $regex: size as string, $options: "i" },
     }).exec();
 
-    return res.status(200).json(products);
+    return res.status(200).json(products.reverse());
   } catch (error) {
     return res.status(500).send(error);
   }
