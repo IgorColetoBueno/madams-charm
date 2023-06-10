@@ -54,6 +54,7 @@ const schema = yup.object({
         (value: any) => value && SUPPORTED_FORMATS.includes(value.type)
       )
   ),
+  photos: yup.array(yup.string()),
 });
 
 const ProductEdit = ({ params: { id } }: IProductEditProps) => {
@@ -114,7 +115,7 @@ const ProductEdit = ({ params: { id } }: IProductEditProps) => {
     formData.append("category", data.category!);
     formData.append("buyDate", data.buyDate!);
     formData.append("buyValue", data.buyValue as any);
-    formData.append("photos", initialValues?.photos as any);
+    formData.append("photos", data.photos as any);
     const photosNames = initialValues?.photos.map((photo) =>
       photo.substring(photo.lastIndexOf("/") + 1)
     );
@@ -123,7 +124,7 @@ const ProductEdit = ({ params: { id } }: IProductEditProps) => {
       ?.filter(
         (file) => !photosNames?.some((photoName) => file.name === photoName)
       )
-      .map((file) => formData.append("files", file as any));
+      .forEach((file) => formData.append("files", file as any));
 
     try {
       const response = await fetch("/api/product/edit", {
@@ -345,12 +346,18 @@ const ProductEdit = ({ params: { id } }: IProductEditProps) => {
 
               {!!values.files && !!values.files?.length && (
                 <PhotoFromInputViewer
-                  onRemove={(index) =>
+                  onRemove={(index) => {
+                    const file = values.files![index];
+
+                    setFieldValue(
+                      "photos",
+                      values.photos.filter((q) => !q.includes(file.name))
+                    );
                     setFieldValue(
                       "files",
                       values.files?.filter((q) => q !== values.files![index])
-                    )
-                  }
+                    );
+                  }}
                   photos={values.files}
                 />
               )}

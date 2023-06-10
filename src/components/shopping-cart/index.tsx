@@ -1,20 +1,20 @@
-import { useMemo, useState } from "react";
-import IconButton from "../icon-button/IconButton";
+import { RootState } from "@/store";
+import { deleteProductFromCart } from "@/store/shoppingCartSlice";
 import {
   ChevronDoubleRightIcon,
   ChevronDownIcon,
   ChevronUpIcon,
-  MinusIcon,
+  XMarkIcon,
 } from "@heroicons/react/24/solid";
 import classNames from "classnames";
+import { useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "@/store";
 import Button from "../button/Button";
-import { deleteProductFromCart } from "@/store/shoppingCartSlice";
+import IconButton from "../icon-button/IconButton";
 interface IShoppingCartProps {}
 
 const ShoppingCart = ({}: IShoppingCartProps) => {
-  const [expanded, setExpanded] = useState(false);
+  const [expanded, setExpanded] = useState(true);
   const shoppingCart = useSelector(
     (state: RootState) => state.data.shoppingCart
   );
@@ -78,11 +78,11 @@ const ShoppingCart = ({}: IShoppingCartProps) => {
                 <IconButton
                   className="ml-2"
                   onClick={() => dispatch(deleteProductFromCart(product._id))}
-                  color="white"
-                  textColor="white"
-                  textColorOnHover="red"
+                  color="red"
+                  textColor="red"
+                  textColorOnHover="white"
                 >
-                  <MinusIcon width={15} />
+                  <XMarkIcon width={15} />
                 </IconButton>
               </div>
             </div>
