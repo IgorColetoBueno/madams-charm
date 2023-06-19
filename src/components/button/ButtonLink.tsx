@@ -1,12 +1,12 @@
 import classNames from "classnames";
-import { ButtonHTMLAttributes, DetailedHTMLProps } from "react";
+import { ButtonHTMLAttributes, DetailedHTMLProps, ReactNode } from "react";
 
 interface IButtonLinkProps
   extends DetailedHTMLProps<
     ButtonHTMLAttributes<HTMLButtonElement>,
     HTMLButtonElement
   > {
-  children: string;
+  children: string | ReactNode;
 }
 
 const ButtonLink = ({ children, className, ...rest }: IButtonLinkProps) => {
@@ -14,7 +14,7 @@ const ButtonLink = ({ children, className, ...rest }: IButtonLinkProps) => {
     <button
       {...rest}
       className={classNames(
-        "font-medium text-blue-600 dark:text-blue-500 hover:underline",
+        "font-medium text-blue-600 dark:text-gray-100 underline underline-offset-4",
         className
       )}
     >

@@ -20,11 +20,14 @@ import {
 } from "@/store/shoppingCartSlice";
 import { ChevronDoubleRightIcon } from "@heroicons/react/24/solid";
 import { useRouter, useSearchParams } from "next/navigation";
-import { ChangeEvent, useCallback, useMemo, useState } from "react";
+import { ChangeEvent, useCallback, useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import useSWR from "swr";
 import ErrorPage from "./error";
 import { getQueryStringParams } from "@/util/query-string";
+import IconButton from "@/components/icon-button/IconButton";
+import { IProductResponse } from "@/models/product-response";
+import { ArrowDownIcon, ArrowUpIcon } from "@heroicons/react/24/outline";
 
 const Home = () => {
   const router = useRouter();
@@ -32,6 +35,7 @@ const Home = () => {
   const category = params?.get("category") ?? undefined;
   const size = params?.get("size") ?? undefined;
   const price = params?.get("price") ?? undefined;
+  const page = params?.get("page") ?? 0;
   const hasFilters = category || size || price;
 
   const [currProduct, setCurrProduct] = useState<IProduct>();
@@ -59,11 +63,12 @@ const Home = () => {
         category: e.target.value,
         size,
         price,
+        page,
       });
 
       router.replace(`?${newParams}`);
     },
-    [price, router, size]
+    [page, price, router, size]
   );
 
   const handleSizeChange = useCallback(
@@ -72,11 +77,27 @@ const Home = () => {
         size: e.target.value,
         category,
         price,
+        page,
       });
 
       router.replace(`?${newParams}`);
     },
-    [category, price, router]
+    [category, page, price, router]
+  );
+
+  const handlePage = useCallback(
+    (newPage: number) => {
+      const newParams = getQueryStringParams({
+        size,
+        category,
+        price,
+        page: newPage.toString(),
+      });
+
+      console.log(newParams);
+      router.replace(`?${newParams}`);
+    },
+    [category, price, router, size]
   );
 
   const handlePriceChange = useCallback(
@@ -85,11 +106,12 @@ const Home = () => {
         price: e.target.value,
         category,
         size,
+        page,
       });
 
       router.replace(`?${newParams}`);
     },
-    [category, router, size]
+    [category, page, router, size]
   );
 
   const resetFilters = useCallback(() => {
@@ -102,12 +124,25 @@ const Home = () => {
     category,
     size,
     price,
+    page,
   });
 
-  const { data, error } = useSWR<IProduct[]>(
+  const { data, error } = useSWR<IProductResponse>(
     `/api/product/search?${formattedQuery}`,
     (url) => fetch(url).then((res) => res.json())
   );
+
+  const handleNextPage = useCallback(() => {
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+    handlePage(Math.max(Number(page) + 1, 0));
+  }, [handlePage, page]);
+
+  const handlePreviousPage = useCallback(() => {
+    handlePage(Math.max(Number(page) - 1, 0));
+  }, [handlePage, page]);
 
   if (!!error) return <ErrorPage response={error} />;
 
@@ -149,7 +184,7 @@ const Home = () => {
         {!!currProduct && <ProductDetail product={currProduct} />}
       </Modal>
       <ShoppingCart />
-      <main className="max-w-screen-xl mx-auto my-5 space-y-5 px-5">
+      <main className="max-w-screen-xl mx-auto my-5 space-y-5 px-5 py-5">
         <section id="filters" className="flex justify-between flex-wrap gap-5">
           <div className="flex gap-5 flex-wrap">
             <Select
@@ -203,15 +238,36 @@ const Home = () => {
           </section>
         )}
         {!data && <Spinner />}
+        {data?.hasPreviousPage && (
+          <section id="show-more-upper" className="flex justify-center">
+            <ButtonLink onClick={handlePreviousPage}>
+              <div className="flex gap-1">
+                Página anterior
+                <ArrowUpIcon width={20} />
+              </div>
+            </ButtonLink>
+          </section>
+        )}
         <section id="products" className="flex justify-around flex-wrap gap-5">
-          {(data || []).map((product, key) => (
-            <ProductCard
-              onClick={() => setCurrProduct(product)}
-              key={`product-${key}`}
-              {...product}
-            />
-          ))}
+          {data &&
+            data.data.map((product, key) => (
+              <ProductCard
+                onClick={() => setCurrProduct(product)}
+                key={`product-${key}`}
+                {...product}
+              />
+            ))}
         </section>
+        {data?.hasNextPage && (
+          <section id="show-more-down" className="flex justify-center">
+            <ButtonLink onClick={handleNextPage}>
+              <div className="flex gap-1">
+                Próxima página
+                <ArrowDownIcon width={20} />
+              </div>
+            </ButtonLink>
+          </section>
+        )}
       </main>
       <footer></footer>
     </>
