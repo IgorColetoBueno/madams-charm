@@ -1,15 +1,9 @@
 "use client";
 import { IProduct } from "@/models/product";
-import {
-  ChevronLeftIcon,
-  ChevronRightIcon,
-  XMarkIcon,
-} from "@heroicons/react/24/solid";
-import Image from "next/image";
-import { DetailedHTMLProps, HTMLAttributes, MouseEvent, useState } from "react";
-import IconButton from "../icon-button/IconButton";
-import classNames from "classnames";
+import { XMarkIcon } from "@heroicons/react/24/solid";
+import { DetailedHTMLProps, HTMLAttributes, MouseEvent } from "react";
 import Carousel from "../carousel";
+import IconButton from "../icon-button/IconButton";
 
 type IProductCardProps = DetailedHTMLProps<
   HTMLAttributes<HTMLDivElement>,
@@ -30,28 +24,6 @@ const ProductCard = ({
   onClick,
   onDelete,
 }: IProductCardProps) => {
-  const [page, setPage] = useState(0);
-
-  const navigateToPrevious = (e: MouseEvent<HTMLButtonElement, any>) => {
-    e.stopPropagation();
-
-    if (page === 0) {
-      setPage(photos.length - 1);
-      return;
-    }
-    setPage(page - 1);
-  };
-
-  const navigateToNext = (e: MouseEvent<HTMLButtonElement, any>) => {
-    e.stopPropagation();
-
-    if (page === photos?.length - 1) {
-      setPage(0);
-      return;
-    }
-    setPage(page + 1);
-  };
-
   const handleDelete = (e: MouseEvent<HTMLButtonElement, any>) => {
     e.stopPropagation();
 
@@ -81,8 +53,7 @@ const ProductCard = ({
       <div className="p-2 flex flex-col justify-between space-y-2">
         <div>
           <span className="text-lg dark:text-white text-gray-800 font-medium flex justify-between">
-            <span>{name} </span>
-            <span>{size}</span>
+            <span>{name}</span>
           </span>
           {!!promotionalMessage && (
             <p className="text-sm text-gray-600 dark:text-gray-400">
@@ -90,7 +61,8 @@ const ProductCard = ({
             </p>
           )}
         </div>
-        <div className="flex justify-end flex-col w-full">
+        <div className="flex justify-between flex-row w-full mt-10">
+          <p className="text-semibold self-end">{size}</p>
           <p className="text-semibold text-2xl self-end">
             {value!.toLocaleString("pt-BR", {
               style: "currency",

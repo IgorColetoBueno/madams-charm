@@ -39,7 +39,7 @@ const Carousel: React.FC<CarouselProps> = ({ images }) => {
                 width={1200}
                 style={{ height: "100%", width: "100%" }}
                 src={image}
-                className="w-full h-full object-cover rounded-lg"
+                className="w-full h-full object-cover object-center rounded-lg"
                 alt={`Slide ${index}`}
               />
             </div>
@@ -75,18 +75,6 @@ const Carousel: React.FC<CarouselProps> = ({ images }) => {
               Next
             </span>
           </button>
-          {/* <button
-            className="px-4 py-2 text-white bg-gray-800 rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-800"
-            onClick={goToPrevSlide}
-          >
-            Prev
-          </button>
-          <button
-            className="px-4 py-2 text-white bg-gray-800 rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-800"
-            onClick={goToNextSlide}
-          >
-            Next
-          </button> */}
         </div>
       </div>
     </div>

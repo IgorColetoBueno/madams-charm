@@ -6,6 +6,7 @@ interface ISelectProps
     SelectHTMLAttributes<HTMLSelectElement>,
     HTMLSelectElement
   > {
+  id: string;
   success: boolean;
   errorMessage?: string;
   containerClassName?: string;
@@ -54,14 +55,14 @@ const Select = ({
         {...rest}
         id={rest.id || `select-${rest.name}`}
         className={classNames(
-          "block w-full p-2.5 text-sm rounded-lg border",
+          "block sm:min-w-[200px] min-w-[90vw] w-full p-2.5 text-sm rounded-lg border",
           selectClassname,
           rest.className
         )}
         placeholder="Error select"
       >
         <option hidden value="">
-          Select...
+          Selecione...
         </option>
         {children}
       </select>
