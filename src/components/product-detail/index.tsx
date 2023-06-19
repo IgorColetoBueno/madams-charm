@@ -17,10 +17,13 @@ const ProductDetail = ({
 
   return (
     <div
-      className={classNames(className, "flex flex-wrap max-h-[750px]")}
+      className={classNames(
+        className,
+        "flex flex-wrap max-h-[750px] max-w-[800px]"
+      )}
       {...rest}
     >
-      <div className="flex flex-col m-w-96 space-y-5">
+      <div className="flex flex-col space-y-5">
         <div className="overflow-hidden rounded-lg min-w-[280px] min-h-[280px] sm:min-h-[220px]">
           <div className="relative w-full transition duration-500 ease-in-out transform translate-x-0 min-w-[280px] min-h-[280px] sm:min-h-[220px]">
             {product.photos.map((image, index) => (
@@ -31,6 +34,8 @@ const ProductDetail = ({
                 }`}
               >
                 <Image
+                  priority
+                  loading="eager"
                   height={1600}
                   width={1200}
                   style={{ height: "100%", width: "100%" }}
@@ -42,21 +47,6 @@ const ProductDetail = ({
             ))}
           </div>
         </div>
-        {/* {product.photos.map((photo, index) => (
-          <div
-            key={`product-main-photo-${index}`}
-            className={classNames({ hidden: currImage !== photo })}
-          >
-            <Image
-              priority={index === 0}
-              className="max-h-[500px] rounded-lg"
-              src={currImage}
-              width={500}
-              height={500}
-              alt="..."
-            />
-          </div>
-        ))} */}
         <div className="flex flex-row overflow-x-auto gap-5">
           {product.photos.map((photo, index) => (
             <div
@@ -66,6 +56,7 @@ const ProductDetail = ({
             >
               <Image
                 priority
+                loading="eager"
                 className="h-auto max-w-full rounded-lg"
                 src={photo}
                 width={100}
