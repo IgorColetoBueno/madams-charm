@@ -1,18 +1,16 @@
 "use client";
 import ErrorPage from "@/app/error";
-import Loading from "@/app/loading";
 import Select from "@/components/Select";
 import Button from "@/components/button/Button";
+import ButtonLink from "@/components/button/ButtonLink";
 import Main from "@/components/main";
 import Navbar from "@/components/navbar/Navbar";
 import ProductCard from "@/components/product-card";
 import Spinner from "@/components/spinner/Spinner";
-import {
-  IProduct,
-  PRODUCT_CATEGORY_LIST,
-  PRODUCT_SIZE_LIST,
-} from "@/models/product";
+import { PRODUCT_CATEGORY_LIST, PRODUCT_SIZE_LIST } from "@/models/product";
+import { IProductResponse } from "@/models/product-response";
 import { getQueryStringParams } from "@/util/query-string";
+import { ArrowDownIcon, ArrowUpIcon } from "@heroicons/react/24/outline";
 import { useRouter, useSearchParams } from "next/navigation";
 import { ChangeEvent, useCallback } from "react";
 import useSWR from "swr";
@@ -25,8 +23,9 @@ const Products = ({}: IProductsProps) => {
   const category = params?.get("category") ?? undefined;
   const size = params?.get("size") ?? undefined;
   const price = params?.get("price") ?? undefined;
+  const page = params?.get("page") ?? 0;
   const hasFilters = category || size || price;
-  const { data, mutate, error } = useSWR<IProduct[]>(
+  const { data, mutate, error } = useSWR<IProductResponse>(
     `/api/product/search`,
     (url) => fetch(url).then((res) => res.json())
   );
@@ -61,6 +60,21 @@ const Products = ({}: IProductsProps) => {
     [category, price, router]
   );
 
+  const handlePage = useCallback(
+    (newPage: number) => {
+      const newParams = getQueryStringParams({
+        size,
+        category,
+        price,
+        page: newPage.toString(),
+      });
+
+      console.log(newParams);
+      router.replace(`?${newParams}`);
+    },
+    [category, price, router, size]
+  );
+
   const handlePriceChange = useCallback(
     (e: ChangeEvent<HTMLSelectElement>) => {
       const newParams = getQueryStringParams({
@@ -79,6 +93,18 @@ const Products = ({}: IProductsProps) => {
 
     router.replace(`?${newParams}`);
   }, [router]);
+
+  const handleNextPage = useCallback(() => {
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+    handlePage(Math.max(Number(page) + 1, 0));
+  }, [handlePage, page]);
+
+  const handlePreviousPage = useCallback(() => {
+    handlePage(Math.max(Number(page) - 1, 0));
+  }, [handlePage, page]);
 
   if (!!error) return <ErrorPage response={error} />;
 
@@ -146,9 +172,19 @@ const Products = ({}: IProductsProps) => {
             </Button>
           </section>
         )}
+        {data?.hasPreviousPage && (
+          <section id="show-more-upper" className="flex justify-center">
+            <ButtonLink onClick={handlePreviousPage}>
+              <div className="flex gap-1">
+                Página anterior
+                <ArrowUpIcon width={20} />
+              </div>
+            </ButtonLink>
+          </section>
+        )}
         <section id="products" className="flex justify-around flex-wrap gap-5">
-          {!!data &&
-            data.map((product, key) => (
+          {!!data?.data &&
+            data.data.map((product, key) => (
               <ProductCard
                 onDelete={() =>
                   fetch(`/api/product/delete/${product._id}`, {
@@ -165,6 +201,16 @@ const Products = ({}: IProductsProps) => {
               />
             ))}
         </section>
+        {data?.hasNextPage && (
+          <section id="show-more-down" className="flex justify-center">
+            <ButtonLink onClick={handleNextPage}>
+              <div className="flex gap-1">
+                Próxima página
+                <ArrowDownIcon width={20} />
+              </div>
+            </ButtonLink>
+          </section>
+        )}
       </Main>
     </>
   );
