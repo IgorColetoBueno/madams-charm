@@ -25,8 +25,14 @@ const Products = ({}: IProductsProps) => {
   const price = params?.get("price") ?? undefined;
   const page = params?.get("page") ?? 0;
   const hasFilters = category || size || price;
+  const formattedQuery = getQueryStringParams({
+    category,
+    size,
+    price,
+    page,
+  });
   const { data, mutate, error } = useSWR<IProductResponse>(
-    `/api/product/search`,
+    `/api/product/search?${formattedQuery}`,
     (url) => fetch(url).then((res) => res.json())
   );
 
@@ -73,7 +79,6 @@ const Products = ({}: IProductsProps) => {
         page: newPage.toString(),
       });
 
-      console.log(newParams);
       router.replace(
         `/products/8a3a9b86-bc37-4628-a7d6-b9512b20ca71?${newParams}`
       );
