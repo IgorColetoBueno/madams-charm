@@ -42,7 +42,9 @@ const Products = ({}: IProductsProps) => {
         price,
       });
 
-      router.replace(`?${newParams}`);
+      router.replace(
+        `/products/8a3a9b86-bc37-4628-a7d6-b9512b20ca71?${newParams}`
+      );
     },
     [price, router, size]
   );
@@ -55,7 +57,9 @@ const Products = ({}: IProductsProps) => {
         price,
       });
 
-      router.replace(`?${newParams}`);
+      router.replace(
+        `/products/8a3a9b86-bc37-4628-a7d6-b9512b20ca71?${newParams}`
+      );
     },
     [category, price, router]
   );
@@ -70,7 +74,9 @@ const Products = ({}: IProductsProps) => {
       });
 
       console.log(newParams);
-      router.replace(`?${newParams}`);
+      router.replace(
+        `/products/8a3a9b86-bc37-4628-a7d6-b9512b20ca71?${newParams}`
+      );
     },
     [category, price, router, size]
   );

@@ -24,21 +24,25 @@ export default async function GET(req: NextApiRequest, res: NextApiResponse) {
     const totalProducts = await Product.countDocuments();
     const totalPages = Math.ceil(totalProducts / PAGE_SIZE);
 
-    const products: IProduct[] = await Product.find({
+    let productsQuery = Product.find({
       category: { $regex: category as string, $options: "i" },
       size: size ?? EMPTY_FILTER,
-    })
-      .sort({
+    });
+
+    if (price) {
+      productsQuery = productsQuery.sort({
         value: valueSort as any,
-      })
-      .skip(skip)
-      .limit(PAGE_SIZE)
-      .exec();
+      });
+    } else {
+      productsQuery = productsQuery.sort({ $natural: -1 });
+    }
+
+    productsQuery = productsQuery.skip(skip).limit(PAGE_SIZE);
 
     return res.status(200).json({
       hasPreviousPage: Number(page) > 0,
       hasNextPage: Number(page) + 1 < totalPages,
-      data: products,
+      data: (await productsQuery.exec()) as IProduct[],
     } as IProductResponse);
   } catch (error) {
     return res.status(500).send(error);
