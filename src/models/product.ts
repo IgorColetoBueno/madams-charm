@@ -36,7 +36,14 @@ export type ProductSize =
   | "G/GG"
   | "GG"
   | "GG/XG"
-  | "XG";
+  | "XG"
+  | "P/GG"
+  | "M/G/GG"
+  | "P/G"
+  | "P/M/G/GG"
+  | "P/M/GG"
+  | "P/G/GG"
+  | "M/GG";
 
 export const PRODUCT_SIZE_LIST: ProductSize[] = [
   "PP",
@@ -50,6 +57,13 @@ export const PRODUCT_SIZE_LIST: ProductSize[] = [
   "GG",
   "GG/XG",
   "XG",
+  "P/GG",
+  "M/G/GG",
+  "P/G",
+  "P/M/G/GG",
+  "P/M/GG",
+  "P/G/GG",
+  "M/GG",
 ];
 
 export interface IProduct {
