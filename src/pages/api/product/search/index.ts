@@ -8,7 +8,7 @@ const EMPTY_FILTER = { $regex: "", $options: "i" };
 const PAGE_SIZE = 16;
 
 export default async function GET(req: NextApiRequest, res: NextApiResponse) {
-  const { category = "", size, price, page = "0" } = req.query;
+  const { category = "", bottomSize, topSize, price, page = "0" } = req.query;
 
   const skip = Number(page) * PAGE_SIZE;
 
@@ -26,7 +26,8 @@ export default async function GET(req: NextApiRequest, res: NextApiResponse) {
 
     let productsQuery = Product.find({
       category: { $regex: category as string, $options: "i" },
-      size: size ?? EMPTY_FILTER,
+      bottomSize: bottomSize ?? EMPTY_FILTER,
+      topSize: topSize ?? EMPTY_FILTER,
     });
 
     if (price) {

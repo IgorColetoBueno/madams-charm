@@ -33,10 +33,11 @@ const Home = () => {
   const router = useRouter();
   const params = useSearchParams();
   const category = params?.get("category") ?? undefined;
-  const size = params?.get("size") ?? undefined;
+  const bottomSize = params?.get("bottomSize") ?? undefined;
+  const topSize = params?.get("topSize") ?? undefined;
   const price = params?.get("price") ?? undefined;
   const page = params?.get("page") ?? 0;
-  const hasFilters = category || size || price;
+  const hasFilters = category || topSize || bottomSize || price;
 
   const [currProduct, setCurrProduct] = useState<IProduct>();
   const dispatch = useDispatch();
@@ -61,20 +62,22 @@ const Home = () => {
     (e: ChangeEvent<HTMLSelectElement>) => {
       const newParams = getQueryStringParams({
         category: e.target.value,
-        size,
+        topSize,
+        bottomSize,
         price,
         page,
       });
 
       router.replace(`?${newParams}`);
     },
-    [page, price, router, size]
+    [bottomSize, page, price, router, topSize]
   );
 
-  const handleSizeChange = useCallback(
+  const handleTopSizeChange = useCallback(
     (e: ChangeEvent<HTMLSelectElement>) => {
       const newParams = getQueryStringParams({
-        size: e.target.value,
+        topSize: e.target.value,
+        bottomSize,
         category,
         price,
         page,
@@ -82,13 +85,29 @@ const Home = () => {
 
       router.replace(`?${newParams}`);
     },
-    [category, page, price, router]
+    [bottomSize, category, page, price, router]
+  );
+
+  const handleBottomSizeChange = useCallback(
+    (e: ChangeEvent<HTMLSelectElement>) => {
+      const newParams = getQueryStringParams({
+        bottomSize: e.target.value,
+        topSize,
+        category,
+        price,
+        page,
+      });
+
+      router.replace(`?${newParams}`);
+    },
+    [category, page, price, router, topSize]
   );
 
   const handlePage = useCallback(
     (newPage: number) => {
       const newParams = getQueryStringParams({
-        size,
+        topSize,
+        bottomSize,
         category,
         price,
         page: newPage.toString(),
@@ -97,7 +116,7 @@ const Home = () => {
       console.log(newParams);
       router.replace(`?${newParams}`);
     },
-    [category, price, router, size]
+    [bottomSize, category, price, router, topSize]
   );
 
   const handlePriceChange = useCallback(
@@ -105,13 +124,14 @@ const Home = () => {
       const newParams = getQueryStringParams({
         price: e.target.value,
         category,
-        size,
+        topSize,
+        bottomSize,
         page,
       });
 
       router.replace(`?${newParams}`);
     },
-    [category, page, router, size]
+    [bottomSize, category, page, router, topSize]
   );
 
   const resetFilters = useCallback(() => {
@@ -122,7 +142,8 @@ const Home = () => {
 
   const formattedQuery = getQueryStringParams({
     category,
-    size,
+    topSize,
+    bottomSize,
     price,
     page,
   });
@@ -202,15 +223,29 @@ const Home = () => {
               ))}
             </Select>
             <Select
-              onChange={handleSizeChange}
-              value={size ?? ""}
-              id="size"
-              label="Tamanho"
+              onChange={handleTopSizeChange}
+              value={topSize ?? ""}
+              id="topSize"
+              label="Tamanho do busto"
               success={false}
             >
               <option value="">Selecione..</option>
               {PRODUCT_SIZE_LIST.map((size) => (
-                <option value={size} key={`size-${size}`}>
+                <option value={size} key={`top-size-${size}`}>
+                  {size}
+                </option>
+              ))}
+            </Select>
+            <Select
+              onChange={handleBottomSizeChange}
+              value={bottomSize ?? ""}
+              id="bottomSize"
+              label="Tamanho da cintura"
+              success={false}
+            >
+              <option value="">Selecione..</option>
+              {PRODUCT_SIZE_LIST.map((size) => (
+                <option value={size} key={`bottom-size-${size}`}>
                   {size}
                 </option>
               ))}

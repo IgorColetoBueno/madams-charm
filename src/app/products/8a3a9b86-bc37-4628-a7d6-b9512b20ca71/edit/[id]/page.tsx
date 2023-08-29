@@ -31,26 +31,28 @@ const SUPPORTED_FORMATS = ["image/jpg", "image/jpeg", "image/gif", "image/png"];
 
 const schema = yup.object({
   _id: yup.string().required().label("Id"),
-  name: yup.string().required().label("Name"),
-  promotionalMessage: yup.string().label("Promotional message"),
-  value: yup.number().required().label("Value").min(1),
-  buyValue: yup.number().required().label("Buy value").min(1),
-  buyDate: yup.string().required().label("Buy date"),
-  category: yup.string().label("Category"),
-  size: yup.string().label("Size"),
+  name: yup.string().required().label("Nome"),
+  promotionalMessage: yup.string().label("Mensagem promocional"),
+  value: yup.number().required().label("Valor (R$)").min(1),
+  buyValue: yup.number().required().label("Preço de compra (R$)").min(1),
+  buyDate: yup.string().required().label("Data da compra"),
+  category: yup.string().label("Categoria"),
+  size: yup.string().label("Tamanho (Depreciado)"),
+  topSize: yup.string().label("Tamanho do busto"),
+  bottomSize: yup.string().label("Tamanho da cintura"),
   files: yup.array(
     yup
       .mixed<File>()
-      .required("A file is required")
+      .required("É obrigatório anexar uma foto ao menos")
       .label("Files")
       .test(
         "fileSize",
-        "File too large",
+        "Arquivo muito grande",
         (value: any) => value && value.size <= FILE_SIZE
       )
       .test(
         "fileFormat",
-        "Unsupported Format",
+        "Formato não suportado",
         (value: any) => value && SUPPORTED_FORMATS.includes(value.type)
       )
   ),
@@ -111,7 +113,8 @@ const ProductEdit = ({ params: { id } }: IProductEditProps) => {
       formData.append("promotionalMessage", data.promotionalMessage);
 
     formData.append("value", data.value as any);
-    formData.append("size", data.size!);
+    formData.append("bottomSize", data.bottomSize!);
+    formData.append("topSize", data.topSize!);
     formData.append("category", data.category!);
     formData.append("buyDate", data.buyDate!);
     formData.append("buyValue", data.buyValue as any);
@@ -165,9 +168,8 @@ const ProductEdit = ({ params: { id } }: IProductEditProps) => {
           submitCount,
         }) => (
           <>
-            <div className="h-full p-5 space-y-5">
+            <div className="h-full p-5 mb-5 space-y-5">
               <h1 className="text-gray-50 text-4xl">Product Register</h1>
-
               <div className="space-y-5">
                 <div>
                   <Input
@@ -177,7 +179,7 @@ const ProductEdit = ({ params: { id } }: IProductEditProps) => {
                     onBlur={handleBlur}
                     value={values.name}
                     name="name"
-                    label="Name"
+                    label="Nome"
                     success={!!touched.name && !errors.name}
                     errorMessage={
                       !!touched.name && !!errors.name ? errors.name : undefined
@@ -192,7 +194,7 @@ const ProductEdit = ({ params: { id } }: IProductEditProps) => {
                     onBlur={handleBlur}
                     value={values.promotionalMessage}
                     name="promotionalMessage"
-                    label="Promotional Message"
+                    label="Mensagem promocional"
                     success={
                       !!touched.promotionalMessage && !errors.promotionalMessage
                     }
@@ -206,7 +208,7 @@ const ProductEdit = ({ params: { id } }: IProductEditProps) => {
                 </div>
                 <div>
                   <Select
-                    label="Category"
+                    label="Categoria"
                     onChange={handleChange}
                     onBlur={handleBlur}
                     value={values.category}
@@ -228,7 +230,8 @@ const ProductEdit = ({ params: { id } }: IProductEditProps) => {
                 </div>
                 <div>
                   <Select
-                    label="Size"
+                    disabled
+                    label="Tamanho (Depreciado)"
                     onChange={handleChange}
                     onBlur={handleBlur}
                     value={values.size}
@@ -247,6 +250,53 @@ const ProductEdit = ({ params: { id } }: IProductEditProps) => {
                   </Select>
                 </div>
                 <div>
+                  <Select
+                    label="Tamanho do busto"
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    value={values.topSize}
+                    success={!!touched.topSize && !errors.topSize}
+                    errorMessage={
+                      !!touched.topSize && !!errors.topSize
+                        ? errors.topSize
+                        : undefined
+                    }
+                    name="topSize"
+                    id="topSize"
+                  >
+                    {PRODUCT_SIZE_LIST.map((topSize) => (
+                      <option value={topSize} key={`topSize-${topSize}`}>
+                        {topSize}
+                      </option>
+                    ))}
+                  </Select>
+                </div>
+                <div>
+                  <Select
+                    label="Tamanho da cintura"
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    value={values.bottomSize}
+                    success={!!touched.bottomSize && !errors.bottomSize}
+                    errorMessage={
+                      !!touched.bottomSize && !!errors.bottomSize
+                        ? errors.bottomSize
+                        : undefined
+                    }
+                    name="bottomSize"
+                    id="bottomSize"
+                  >
+                    {PRODUCT_SIZE_LIST.map((bottomSize) => (
+                      <option
+                        value={bottomSize}
+                        key={`bottomSize-${bottomSize}`}
+                      >
+                        {bottomSize}
+                      </option>
+                    ))}
+                  </Select>
+                </div>
+                <div>
                   <Input
                     success={!!touched.value && !errors.value}
                     errorMessage={
@@ -254,7 +304,7 @@ const ProductEdit = ({ params: { id } }: IProductEditProps) => {
                         ? errors.value
                         : undefined
                     }
-                    label="Value"
+                    label="Valor (R$)"
                     type="number"
                     onChange={handleChange}
                     onBlur={handleBlur}
@@ -270,7 +320,7 @@ const ProductEdit = ({ params: { id } }: IProductEditProps) => {
                         ? errors.buyValue
                         : undefined
                     }
-                    label="Buy value"
+                    label="Data da compra"
                     type="number"
                     onChange={handleChange}
                     onBlur={handleBlur}
@@ -317,10 +367,10 @@ const ProductEdit = ({ params: { id } }: IProductEditProps) => {
                 )}
                 <div className="flex justify-end gap-3">
                   <Button color="white" type="submit" onClick={handleGoBack}>
-                    Go back
+                    Voltar
                   </Button>
                   <Button color="teal" type="submit" onClick={submitForm}>
-                    Submit
+                    Salvar
                   </Button>
                 </div>
               </div>

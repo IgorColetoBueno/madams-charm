@@ -25,45 +25,15 @@ export const PRODUCT_CATEGORY_LIST: ProductCategory[] = [
   "Vestido",
 ];
 
-export type ProductSize =
-  | "PP"
-  | "PP/P"
-  | "P"
-  | "P/M"
-  | "M"
-  | "M/G"
-  | "G"
-  | "G/GG"
-  | "GG"
-  | "GG/XG"
-  | "XG"
-  | "P/GG"
-  | "M/G/GG"
-  | "P/G"
-  | "P/M/G/GG"
-  | "P/M/GG"
-  | "P/G/GG"
-  | "M/GG";
+export type ProductSize = "PP" | "P" | "M" | "G" | "GG" | "XG";
 
 export const PRODUCT_SIZE_LIST: ProductSize[] = [
   "PP",
-  "PP/P",
   "P",
-  "P/M",
   "M",
-  "M/G",
   "G",
-  "G/GG",
   "GG",
-  "GG/XG",
   "XG",
-  "P/GG",
-  "M/G/GG",
-  "P/G",
-  "P/M/G/GG",
-  "P/M/GG",
-  "P/G/GG",
-  "M/GG",
 ];
 
 export interface IProduct {
@@ -75,6 +45,8 @@ export interface IProduct {
   buyDate: Date;
   category: ProductCategory;
   size: ProductSize;
+  topSize: ProductSize;
+  bottomSize: ProductSize;
   photos: string[];
 }
 const productSchema = new Schema<IProduct>({
@@ -89,7 +61,15 @@ const productSchema = new Schema<IProduct>({
   },
   size: {
     type: String,
-    required: true,
+    required: false,
+  },
+  bottomSize: {
+    type: String,
+    required: false,
+  },
+  topSize: {
+    type: String,
+    required: false,
   },
   value: {
     type: Number,
