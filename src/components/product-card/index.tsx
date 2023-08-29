@@ -20,7 +20,8 @@ const ProductCard = ({
   name,
   promotionalMessage,
   value,
-  size,
+  bottomSize,
+  topSize,
   onClick,
   onDelete,
 }: IProductCardProps) => {
@@ -30,11 +31,13 @@ const ProductCard = ({
     onDelete!();
   };
 
+  const size = [bottomSize, topSize].filter((q) => !!q).join("/");
+
   return (
     <div
       data-testid="product-card"
       onClick={onClick}
-      className="relative cursor-pointer sm:w-[280px] w-full rounded-lg justify-self-center bg-gray-200 border border-gray-200 rounded-lg shadow shadow-lg dark:border-gray-800 dark:bg-gray-800 hover:shadow-xl"
+      className="relative cursor-pointer sm:w-[280px] w-full justify-self-center bg-gray-200 border border-gray-200 rounded-lg shadow shadow-lg dark:border-gray-800 dark:bg-gray-800 hover:shadow-xl"
     >
       {!!photos?.length && <Carousel images={photos} />}
       {!!onDelete && (

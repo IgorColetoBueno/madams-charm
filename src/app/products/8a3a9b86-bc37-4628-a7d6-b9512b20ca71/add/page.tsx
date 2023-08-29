@@ -31,26 +31,28 @@ const INITIAL_VALUES = {
 } as yup.InferType<typeof schema>;
 
 const schema = yup.object({
-  name: yup.string().required().label("Name"),
-  promotionalMessage: yup.string().label("Promotional message"),
-  value: yup.number().required().label("Value").min(1),
-  buyValue: yup.number().required().label("Buy value").min(1),
-  buyDate: yup.string().required().label("Buy date"),
-  category: yup.string().label("Category"),
-  size: yup.string().label("Size"),
+  name: yup.string().required().label("Nome"),
+  promotionalMessage: yup.string().label("Mensagem promocional"),
+  value: yup.number().required().label("Valor (R$)").min(1),
+  buyValue: yup.number().required().label("Preço de compra (R$)").min(1),
+  buyDate: yup.string().required().label("Data da compra"),
+  category: yup.string().label("Categoria"),
+  size: yup.string().label("Tamanho (Depreciado)"),
+  topSize: yup.string().label("Tamanho do busto"),
+  bottomSize: yup.string().label("Tamanho da cintura"),
   files: yup.array(
     yup
       .mixed<File>()
-      .required("A file is required")
+      .required("É obrigatório anexar uma foto ao menos")
       .label("Files")
       .test(
         "fileSize",
-        "File too large",
+        "Arquivo muito grande",
         (value: any) => value && value.size <= FILE_SIZE
       )
       .test(
         "fileFormat",
-        "Unsupported Format",
+        "Formato não suportado",
         (value: any) => value && SUPPORTED_FORMATS.includes(value.type)
       )
   ),
@@ -66,22 +68,7 @@ const ProductAdd = ({}: IProductAddProps) => {
 
   const submit = async (
     data: yup.InferType<typeof schema>,
-    resetForm: (
-      nextState?:
-        | Partial<
-            FormikState<{
-              promotionalMessage?: string | undefined;
-              category?: string | undefined;
-              size?: string | undefined;
-              files?: any[] | undefined;
-              name: string;
-              value: number;
-              buyValue: number;
-              buyDate: string;
-            }>
-          >
-        | undefined
-    ) => void
+    resetForm: () => void
   ) => {
     const formData = new FormData();
 
@@ -91,7 +78,8 @@ const ProductAdd = ({}: IProductAddProps) => {
       formData.append("promotionalMessage", data.promotionalMessage);
 
     formData.append("value", data.value as any);
-    formData.append("size", data.size!);
+    formData.append("bottomSize", data.bottomSize!);
+    formData.append("topSize", data.topSize!);
     formData.append("category", data.category!);
     formData.append("buyDate", data.buyDate);
     formData.append("buyValue", data.buyValue as any);
@@ -147,7 +135,7 @@ const ProductAdd = ({}: IProductAddProps) => {
                     onBlur={handleBlur}
                     value={values.name}
                     name="name"
-                    label="Name"
+                    label="Nome"
                     success={!!touched.name && !errors.name}
                     errorMessage={
                       !!touched.name && !!errors.name ? errors.name : undefined
@@ -162,7 +150,7 @@ const ProductAdd = ({}: IProductAddProps) => {
                     onBlur={handleBlur}
                     value={values.promotionalMessage}
                     name="promotionalMessage"
-                    label="Promotional Message"
+                    label="Mensagem promocional"
                     success={
                       !!touched.promotionalMessage && !errors.promotionalMessage
                     }
@@ -176,7 +164,7 @@ const ProductAdd = ({}: IProductAddProps) => {
                 </div>
                 <div>
                   <Select
-                    label="Category"
+                    label="Categoria"
                     onChange={handleChange}
                     onBlur={handleBlur}
                     value={values.category}
@@ -198,7 +186,8 @@ const ProductAdd = ({}: IProductAddProps) => {
                 </div>
                 <div>
                   <Select
-                    label="Size"
+                    disabled
+                    label="Tamanho (Depreciado)"
                     onChange={handleChange}
                     onBlur={handleBlur}
                     value={values.size}
@@ -217,6 +206,53 @@ const ProductAdd = ({}: IProductAddProps) => {
                   </Select>
                 </div>
                 <div>
+                  <Select
+                    label="Tamanho do busto"
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    value={values.topSize}
+                    success={!!touched.topSize && !errors.topSize}
+                    errorMessage={
+                      !!touched.topSize && !!errors.topSize
+                        ? errors.topSize
+                        : undefined
+                    }
+                    name="topSize"
+                    id="topSize"
+                  >
+                    {PRODUCT_SIZE_LIST.map((topSize) => (
+                      <option value={topSize} key={`topSize-${topSize}`}>
+                        {topSize}
+                      </option>
+                    ))}
+                  </Select>
+                </div>
+                <div>
+                  <Select
+                    label="Tamanho da cintura"
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    value={values.bottomSize}
+                    success={!!touched.bottomSize && !errors.bottomSize}
+                    errorMessage={
+                      !!touched.bottomSize && !!errors.bottomSize
+                        ? errors.bottomSize
+                        : undefined
+                    }
+                    name="bottomSize"
+                    id="bottomSize"
+                  >
+                    {PRODUCT_SIZE_LIST.map((bottomSize) => (
+                      <option
+                        value={bottomSize}
+                        key={`bottomSize-${bottomSize}`}
+                      >
+                        {bottomSize}
+                      </option>
+                    ))}
+                  </Select>
+                </div>
+                <div>
                   <Input
                     success={!!touched.value && !errors.value}
                     errorMessage={
@@ -224,7 +260,7 @@ const ProductAdd = ({}: IProductAddProps) => {
                         ? errors.value
                         : undefined
                     }
-                    label="Value"
+                    label="Valor (R$)"
                     type="number"
                     onChange={handleChange}
                     onBlur={handleBlur}
@@ -240,7 +276,7 @@ const ProductAdd = ({}: IProductAddProps) => {
                         ? errors.buyValue
                         : undefined
                     }
-                    label="Buy value"
+                    label="Valor de compra (R$)"
                     type="number"
                     onChange={handleChange}
                     onBlur={handleBlur}
@@ -256,7 +292,7 @@ const ProductAdd = ({}: IProductAddProps) => {
                         ? errors.buyDate
                         : undefined
                     }
-                    label="Buy date"
+                    label="Data da compra"
                     type="date"
                     onChange={handleChange}
                     onBlur={handleBlur}
@@ -284,10 +320,10 @@ const ProductAdd = ({}: IProductAddProps) => {
                 )}
                 <div className="flex justify-end gap-3">
                   <Button color="white" type="submit" onClick={handleGoBack}>
-                    Go back
+                    Voltar
                   </Button>
                   <Button color="teal" type="submit" onClick={submitForm}>
-                    Submit
+                    Salvar
                   </Button>
                 </div>
               </div>
